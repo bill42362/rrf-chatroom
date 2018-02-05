@@ -2,6 +2,7 @@
 'use strict';
 import React from 'react';
 import Debug from 'debug';
+import Messages from './Messages.react.js';
 import '../css/app.less';
 
 Debug.disable();
@@ -13,6 +14,7 @@ class App extends React.Component {
         const { } = this.props;
         return <div className='app'>
             React-Redux-Firebase Chatroom
+            <Messages />
         </div>;
     }
 }
