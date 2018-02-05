@@ -47,11 +47,6 @@ const store = createStore(
     reactReduxFirebase(firebase, rrfConfig)
 );
 
-store.dispatch(sendMessage({message: {
-    author: 'sbii',
-    content: 'hi',
-}}));
-
 const ConnectedApp = connect(
     (state, ownProps) => {
         return {
