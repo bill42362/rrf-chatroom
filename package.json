@@ -4,6 +4,11 @@
   "description": "Chatroom implementd with React-Redux-Firebase.",
   "main": "dist/server/index.js",
   "scripts": {
+    "build": "rimraf dist && babel src -d dist --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress",
+    "start": "npm run build && cross-env NODE_ENV=production node dist/server",
+    "devserver": "babel-node src/server",
+    "devserver:auto": "nodemon --ignore dist --exec babel-node src/server",
+    "wds": "webpack-dev-server --progress",
     "test": "jest"
   },
   "repository": {
@@ -21,5 +26,38 @@
   "bugs": {
     "url": "https://github.com/bill42362/rrf-chatroom/issues"
   },
-  "homepage": "https://github.com/bill42362/rrf-chatroom#readme"
+  "homepage": "https://github.com/bill42362/rrf-chatroom#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.1.3",
+    "css-loader": "^0.28.9",
+    "debug": "^3.1.0",
+    "es6-promise": "^4.2.4",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.6",
+    "img-loader": "^2.0.1",
+    "isomorphic-fetch": "^2.2.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "nodemon": "^1.14.12",
+    "normalize.css": "^7.0.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "rimraf": "^2.6.2",
+    "style-loader": "^0.20.1",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1"
+  }
 }
