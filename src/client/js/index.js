@@ -3,11 +3,12 @@
 import { createStore, compose, combineReducers, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import * as firebase from 'firebase/app';
-import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase, getFirebase, firebaseReducer } from 'react-redux-firebase';
 import { connect, Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Debug from 'debug';
+import { sendMessage } from './Messages.js';
 import App from './App.react.js';
 import 'firebase/database';
 import 'normalize.css';
@@ -17,6 +18,7 @@ Debug.disable();
 if('production' != process.env.NODE_ENV) { Debug.enable('rrf-chatroom:*'); }
 
 const reducer = combineReducers({
+    firebase: firebaseReducer
 });
 
 const FIREBASE_CONFIG = process.env.FIREBASE_CONFIG;
@@ -44,6 +46,11 @@ const store = createStore(
     ),
     reactReduxFirebase(firebase, rrfConfig)
 );
+
+store.dispatch(sendMessage({message: {
+    author: 'sbii',
+    content: 'hi',
+}}));
 
 const ConnectedApp = connect(
     (state, ownProps) => {
