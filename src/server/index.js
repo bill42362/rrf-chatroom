@@ -8,6 +8,7 @@ const expressStaticRoutes = [
     {path: '/img/', serverPath: '/../client/img'},
     {path: '/css/', serverPath: '/../client/css'},
     {path: '/js/', serverPath: '/../client/js'},
+    {path: '/firebase-messaging-sw.js', serverPath: '/../../dist/client/js/firebase-messaging-sw.js'},
 ];
 const renderApp = `
     <!doctype html>
@@ -27,9 +28,9 @@ const renderApp = `
 `;
 const app = Express();
 
-app.get('/', (req, res) => { res.send(renderApp); })
-app.get('/:action', (req, res) => { res.send(renderApp); })
 expressStaticRoutes.forEach(function(route) {
     app.use(route.path, Express.static(__dirname + route.serverPath));
 });
+app.get('/', (req, res) => { res.send(renderApp); })
+app.get('/:action', (req, res) => { res.send(renderApp); })
 app.listen(WEB_PORT);

@@ -12,11 +12,12 @@ const plugins = [
 ];
 
 export default {
-    entry: [
-        'babel-polyfill', './src/client/js',
-    ],
+    entry: {
+        bundle: ['babel-polyfill', './src/client/js'],
+        'firebase-messaging-sw': [ 'babel-polyfill', './src/client/js/firebase-messaging-sw.js' ],
+    },
     output: {
-        filename: 'js/bundle.js',
+        filename: 'js/[name].js',
         path: `${__dirname}/dist/client/`,
         publicPath: isProd ? `/` : `http://localhost:${WDS_PORT}/`,
     },
