@@ -11,9 +11,8 @@ export const initMessaging = ({ messaging: m }) => {
     .then(() => messaging.getToken())
     .then(token => {
         if(token) {
-            console.log('getToken() token:', token);
+            instanceIdToken = token;
         } else {
-            console.log('getToken() no token :(');
         }
     })
     .catch(error => {

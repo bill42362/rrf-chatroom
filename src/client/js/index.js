@@ -8,10 +8,8 @@ import { connect, Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Debug from 'debug';
-import Messaging from './Messaging.js';
 import App from './App.react.js';
 import 'firebase/database';
-import 'firebase/messaging';
 import 'normalize.css';
 import '../css/index.less';
 
@@ -46,9 +44,6 @@ const store = createStore(
     ),
     reactReduxFirebase(firebase, rrfConfig)
 );
-
-const messaging = firebase.messaging();
-Messaging.initMessaging({ messaging });
 
 const ConnectedApp = connect(
     (state, ownProps) => {
