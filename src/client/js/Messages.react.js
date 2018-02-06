@@ -9,6 +9,15 @@ import '../css/messages.less';
 
 class Messages extends React.Component {
     constructor(props) { super(props); }
+    componentDidUpdate(prevProps, prevState) {
+        const { messages } = this.props;
+        const { messages: prevMessages } = prevProps;
+        const base = this.base;
+        const heightMoreThanClient = base.scrollHeight - base.clientHeight;
+        const distanceToBottom = heightMoreThanClient - base.scrollTop;
+        const isFirstLoad = true === isLoaded(messages) && false === isLoaded(prevMessages);
+        if(isFirstLoad || 70 > distanceToBottom) { base.scrollTop = heightMoreThanClient; }
+    }
     render() {
         const { messages } = this.props;
         const messageList = !isLoaded(messages)
@@ -18,7 +27,7 @@ class Messages extends React.Component {
                 : Object.keys(messages).map((key, index) => {
                     return <Message key={key} message={messages[key]} />;
                 });
-        return <div className='messages'>
+        return <div className='messages' ref={base => { this.base = base; }}>
             {messageList}
         </div>;
     }
