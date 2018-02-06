@@ -4,7 +4,7 @@
   "description": "Chatroom implementd with React-Redux-Firebase.",
   "main": "dist/server/index.js",
   "scripts": {
-    "build": "rimraf dist && cross-env NODE_ENV=production webpack -p --progress",
+    "build": "rimraf dist && babel src/server -d dist/server --ignore .test.js && cross-env NODE_ENV=production webpack -p --progress",
     "start": "npm run build && cross-env NODE_ENV=production node dist/server",
     "devserver": "babel-node src/server",
     "devserver:auto": "nodemon --ignore dist --exec babel-node src/server",
