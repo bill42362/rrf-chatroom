@@ -2,6 +2,7 @@
 'use strict';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import EnvConfig from './config.json';
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -89,6 +90,10 @@ export default {
         ? [
             ...plugins,
             new ExtractTextPlugin({filename: 'css/[name].css', allChunks: true}),
+            new CopyWebpackPlugin(
+                [{from: `${__dirname}/src/client/html`, to: 'html'}],
+                {copyUnmodified: true}
+            ),
         ]
         : plugins,
     devtool: isProd ? false : 'source-map',
