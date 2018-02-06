@@ -9,13 +9,13 @@ import '../css/chatroom-users.less';
 class ChatroomUsers extends React.Component {
     constructor(props) { super(props); }
     render() {
-        const { users } = this.props;
+        const { users, userName } = this.props;
         const onlineIndicator = <div className='chatroom-user-online'>・</div>;
         const userList = !isLoaded(users)
             ? <div className='mock-user'>Loading ...</div>
             : isEmpty(users)
                 ? <div className='mock-user'>No online user for now.</div>
-                : Object.keys(users).map((key, index) => {
+                : Object.keys(users).filter(user => userName !== user).map((key, index) => {
                     const user = users[key];
                     const oddClassName = 0 === index%2 ? ' chatroom-user-odd' : '';
                     const lastOnline = <div className='chatroom-user-lastOnline'>{user.lastOnline}</div>;
@@ -36,6 +36,7 @@ export default compose(
         (state, ownProps) => {
             return {
                 users: state.firebase.data.chatroomUsers,
+                userName: state.user.name,
             };
         }
     )
