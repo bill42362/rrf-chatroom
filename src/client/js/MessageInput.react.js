@@ -24,14 +24,18 @@ class MessageInput extends React.Component {
         }
     }
     render() {
-        const { message, updateMessage } = this.props;
+        const { userName, message, updateMessage } = this.props;
+        const contenteditable = <Contenteditable
+            tagName='p' className='message-input-contenteditable'
+            html={message.content} tabIndex='0' ref={input => { this.input = input; }}
+            onChange={e => { updateMessage({message: {content: e.target.value}}); }}
+            onKeyDown={this.onKeyDown}
+        />;
+        const setupUserNameMessage = <div className='setup-user-name-message'>
+            Please setup your name first.
+        </div>;
         return <div className='message-input'>
-            <Contenteditable
-                tagName='p' className='message-input-contenteditable'
-                html={message.content} tabIndex='0' ref={input => { this.input = input; }}
-                onChange={e => { updateMessage({message: {content: e.target.value}}); }}
-                onKeyDown={this.onKeyDown}
-            />
+            {userName ? contenteditable : setupUserNameMessage}
         </div>;
     }
 }
@@ -39,6 +43,7 @@ class MessageInput extends React.Component {
 export default connect(
     (state, ownProps) => ({
         message: state.messageInput,
+        userName: state.user.name,
     }),
     (dispatch, ownProps) => ({
         updateMessage: ({ message }) => {
