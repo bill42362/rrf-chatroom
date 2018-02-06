@@ -8,7 +8,10 @@ import { connect, Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Debug from 'debug';
+import User from './User.js';
+import ChatroomUsers from './ChatroomUsers.js';
 import { sendMessage } from './Messages.js';
+import MessageInput from './MessageInput.js';
 import App from './App.react.js';
 import 'firebase/database';
 import 'normalize.css';
@@ -18,7 +21,10 @@ Debug.disable();
 if('production' != process.env.NODE_ENV) { Debug.enable('rrf-chatroom:*'); }
 
 const reducer = combineReducers({
-    firebase: firebaseReducer
+    firebase: firebaseReducer,
+    user: User.Reducer,
+    chatroomUsers: ChatroomUsers.Reducer,
+    messageInput: MessageInput.Reducer,
 });
 
 const FIREBASE_CONFIG = process.env.FIREBASE_CONFIG;
