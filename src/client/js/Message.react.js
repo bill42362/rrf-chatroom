@@ -1,6 +1,7 @@
 // Message.react.js
 'use strict';
 import React from 'react';
+import { getDateStringWithFormat } from './Utils.js';
 import '../css/message.less';
 
 class Message extends React.Component {
@@ -10,7 +11,9 @@ class Message extends React.Component {
         return <div className='message'>
             <div className='message-metadata'>
                 <div className='message-author'>{message.author}</div>
-                <div className='message-time'>{message.timestamp}</div>
+                <div className='message-time'>
+                    {getDateStringWithFormat({timestamp: message.timestamp, format: 'YYYY/MM/DD hh:mm'})}
+                </div>
             </div>
             <div className='message-content'>{message.content}</div>
         </div>;
