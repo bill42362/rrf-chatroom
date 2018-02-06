@@ -15,15 +15,20 @@ div.chatroom-users {
         }
         div.chatroom-user-name {
             flex: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         div.chatroom-user-online {
             flex: none;
+            margin-left: 5px;
             font-weight: 900;
             color: limegreen;
         }
         div.chatroom-user-lastOnline {
             flex: none;
+            margin-left: 5px;
             line-height: 2em;
+            font-style: oblique;
             font-size: 0.5em;
             font-weight: 900;
             color: gray;
