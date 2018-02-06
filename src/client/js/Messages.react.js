@@ -12,7 +12,7 @@ class Messages extends React.Component {
     render() {
         const { messages } = this.props;
         const messageList = !isLoaded(messages)
-            ? <div className='mock-message'>Loading</div>
+            ? <div className='mock-message'>Loading ...</div>
             : isEmpty(messages)
                 ? <div className='mock-message'>No messages for now.</div>
                 : Object.keys(messages).map((key, index) => {
