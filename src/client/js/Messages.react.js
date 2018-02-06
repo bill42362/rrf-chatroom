@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
+import Message from './Message.react.js';
 import '../css/messages.less';
 
 class Messages extends React.Component {
@@ -11,11 +12,11 @@ class Messages extends React.Component {
     render() {
         const { messages } = this.props;
         const messageList = !isLoaded(messages)
-            ? 'Loading'
+            ? <div className='mock-message'>Loading</div>
             : isEmpty(messages)
-                ? 'No messages for now.'
+                ? <div className='mock-message'>No messages for now.</div>
                 : Object.keys(messages).map((key, index) => {
-                    return <div key={key}>{JSON.stringify(messages[key])}</div>
+                    return <Message key={key} message={messages[key]} />;
                 });
         return <div className='messages'>
             {messageList}
