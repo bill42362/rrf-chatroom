@@ -13,6 +13,18 @@ div.user {
             color: gray;
         }
     }
+    div.user-name-input {
+        input.user-name-input {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+            &:focus {
+                outline: none;
+                border-bottom: 1px solid skyblue;
+            }
+        }
+    }
 }
 
 @media (max-width: 767px) {
