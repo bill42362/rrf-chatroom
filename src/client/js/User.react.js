@@ -27,7 +27,7 @@ class User extends React.Component {
         const userNameInput = <div className='user-name-input'>
             <input
                 className='user-name-input'
-                placeholder='input your name here'
+                placeholder='nickname' autoFocus
                 value={editingName} onChange={e => { updateEditingName({editingName: e.target.value}); }}
                 onKeyDown={this.onKeyDown}
             />
