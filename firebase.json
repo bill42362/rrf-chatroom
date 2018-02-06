@@ -1,1 +1,12 @@
-{}
+{
+    "hosting": {
+        "public": "dist/client",
+        "rewrites": [
+            {
+              "source": "/",
+              "destination": "/html/index.html"
+            }
+        ],
+        "trailingSlash": false
+    }
+}
