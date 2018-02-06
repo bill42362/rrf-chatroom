@@ -13,6 +13,21 @@ div.user {
             color: gray;
         }
     }
+    div.user-name-input {
+        input.user-name-input {
+            width: 100%;
+            border-radius: 0px;
+            border-top: none;
+            border-bottom: 1px solid gray;
+            border-left: none;
+            border-right: none;
+            padding: 0px;
+            &:focus {
+                outline: none;
+                border-bottom: 1px solid skyblue;
+            }
+        }
+    }
 }
 
 @media (max-width: 767px) {
