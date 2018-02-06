@@ -4,7 +4,7 @@ import { createStore, compose, combineReducers, applyMiddleware } from 'redux';
 import ReduxThunk from 'redux-thunk';
 import * as firebase from 'firebase/app';
 import { reactReduxFirebase, getFirebase, firebaseReducer } from 'react-redux-firebase';
-import { connect, Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Debug from 'debug';
@@ -52,18 +52,9 @@ const store = createStore(
     reactReduxFirebase(firebase, rrfConfig)
 );
 
-const ConnectedApp = connect(
-    (state, ownProps) => {
-        return {
-        };
-    },
-    (dispatch, ownProps) => { return {
-    }; }
-)(App);
-
 ReactDOM.render(
     <Provider store={store} >
-        <ConnectedApp />
+        <App />
     </Provider>,
     document.getElementById('app-root')
 );
