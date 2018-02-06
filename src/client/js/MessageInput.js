@@ -1,7 +1,7 @@
 // MessageInput.js
 
 const defaultState = {
-    content: 'Gooday',
+    content: 'Goodday',
 };
 
 export const Reducer = (state = defaultState, action) => {
