@@ -10,7 +10,6 @@ import ReactDOM from 'react-dom';
 import Debug from 'debug';
 import User from './User.js';
 import ChatroomUsers from './ChatroomUsers.js';
-import { sendMessage } from './Messages.js';
 import MessageInput from './MessageInput.js';
 import App from './App.react.js';
 import 'firebase/database';
