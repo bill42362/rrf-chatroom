@@ -2,6 +2,7 @@
 'use strict';
 import React from 'react';
 import { connect } from 'react-redux';
+import Contenteditable from 'react-contenteditable';
 import { Actions } from './MessageInput.js';
 import '../css/message-input.less';
 
@@ -10,8 +11,10 @@ class MessageInput extends React.Component {
     render() {
         const { message, updateMessage } = this.props;
         return <div className='message-input'>
-            <input
-                value={message.content}
+            <Contenteditable
+                tagName='p'
+                className='message-input-contenteditable'
+                html={message.content}
                 onChange={e => {
                     updateMessage({message: {content: e.target.value}});
                 }}

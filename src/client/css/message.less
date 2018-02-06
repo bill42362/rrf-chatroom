@@ -1,0 +1,26 @@
+// message.less
+@import './base.less';
+
+div.message {
+    padding: 0.5em 0.5em 0.5em 1em;
+    div.message-metadata {
+        div.message-author {
+            display: inline-block;
+            font-weight: 700;
+        }
+        div.message-time {
+            display: inline-block;
+            margin-left: 0.5em;
+            font-size: 0.5em;
+        }
+    }
+    div.message-content {
+        margin-top: 0.2em;
+    }
+}
+
+@media (max-width: 767px) {
+    div.message {
+    }
+}
+

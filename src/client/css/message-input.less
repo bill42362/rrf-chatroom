@@ -2,6 +2,15 @@
 @import './base.less';
 
 div.message-input {
+    border-top: 1px solid #d5d5d5;
+    p.message-input-contenteditable {
+        margin: 0px;
+        padding: 0.5em 0.5em 0.5em 1em;
+        &:focus {
+            box-shadow: 2px 0px 2px 1px skyblue;
+            outline: none;
+        }
+    }
 }
 
 @media (max-width: 767px) {

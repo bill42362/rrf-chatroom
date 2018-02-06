@@ -2,6 +2,35 @@
 @import './base.less';
 
 div.app {
+    display: flex;
+    width: 100vw; height: 100vh;
+    div.info {
+        flex: none;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid #d5d5d5;
+        width: 200px;
+        div.user-wrapper {
+            flex: none;
+        }
+        div.chatroom-users-wrapper {
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    div.chatroom {
+        flex: auto;
+        display: flex;
+        flex-direction: column;
+        div.messages-wrapper {
+            flex: auto;
+            overflow: auto;
+        }
+        div.message-input-wrapper {
+            flex: none;
+        }
+    }
 }
 
 @media (max-width: 767px) {

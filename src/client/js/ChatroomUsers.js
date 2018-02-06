@@ -3,6 +3,7 @@
 const defaultState = [
     {name: 'Sbii'},
     {name: 'Sbiii'},
+    {name: 'Sbiiii'},
 ];
 
 export const Reducer = (state = defaultState, action) => {

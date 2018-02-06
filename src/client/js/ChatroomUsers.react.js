@@ -10,7 +10,8 @@ class ChatroomUsers extends React.Component {
         const { users } = this.props;
         return <div className='chatroom-users'>
             {users.map((user, index) => {
-                return <div className='chatroom-user' key={index}>
+                const oddClassName = 0 === index%2 ? ' chatroom-user-odd' : '';
+                return <div className={`chatroom-user${oddClassName}`} key={index}>
                     <div className='chatroom-user-name'>{user.name}</div>
                 </div>;
             })}
