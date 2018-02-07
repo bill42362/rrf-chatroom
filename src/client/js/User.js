@@ -6,7 +6,7 @@ let connectionsRef = undefined;
 let lastOnlineRef = undefined;
 
 const defaultState = {
-    name: 'Sbi',
+    name: '',
     editingName: '',
 };
 
