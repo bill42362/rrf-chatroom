@@ -25,14 +25,16 @@ class App extends React.Component {
                 <UserNameInput />
             </div>}
             {name && <div className='info'>
-                <div className='user-wrapper'>
+                <div className='headings-wrapper'>
+                    <div className='user-wrapper'>
+                        <User />
+                    </div>
                     <div
                         className='shoule-collapse-chatroom-users-toggler' role='button'
                         onClick={() => updateShouldCollapseChatroomUsers({
                             shouldCollapseChatroomUsers: !shouldCollapseChatroomUsers
                         })}
                     >O</div>
-                    <User />
                 </div>
                 <div className='chatroom-users-wrapper' style={{height: chatroomUsersWrapperHeight}}>
                     <ChatroomUsers />

@@ -20,8 +20,11 @@ div.app {
         flex-direction: column;
         border-right: 1px solid #d5d5d5;
         width: 200px;
-        div.user-wrapper {
+        div.headings-wrapper {
             flex: none;
+            display: flex;
+            div.shoule-collapse-chatroom-users-toggler { display: none; }
+            div.user-wrapper { flex: auto; }
         }
         div.chatroom-users-wrapper {
             flex: auto;
@@ -49,6 +52,16 @@ div.app {
         div.info {
             width: unset;
             border-right: none;
+            div.headings-wrapper {
+                div.shoule-collapse-chatroom-users-toggler {
+                    display: block;
+                    margin: 8px 8px 8px 0px;
+                    border: 1px solid gray;
+                    border-radius: 5px;
+                    padding: 5px;
+                    cursor: pointer;
+                }
+            }
             div.chatroom-users-wrapper {
                 overflow: hidden;
                 transition: height .6s ease;
