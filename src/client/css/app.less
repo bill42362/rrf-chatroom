@@ -45,6 +45,15 @@ div.app {
 
 @media (max-width: 767px) {
     div.app {
+        flex-direction: column;
+        div.info {
+            width: unset;
+            border-right: none;
+            div.chatroom-users-wrapper {
+                overflow: hidden;
+                transition: height .6s ease;
+            }
+        }
     }
 }
 
