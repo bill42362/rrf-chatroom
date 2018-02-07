@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase';
 import { getDateStringWithFormat } from './Utils.js';
+import { Actions as LayoutVarsActions } from './LayoutVars.js';
 import '../css/chatroom-users.less';
 
 const MSEC_IN_ONE_DAY = 3600*24*1000;
@@ -12,6 +13,13 @@ const MSEC_IN_ONE_DAY = 3600*24*1000;
 const onlineIndicator = <div className='chatroom-user-online'>・</div>;
 class ChatroomUsers extends React.Component {
     constructor(props) { super(props); }
+    componentDidUpdate(prevProps, prevState) {
+        const { chatroomUsersHeight, updateLayoutVarsChatroomUsersHeight } = this.props;
+        const newChatroomUsersHeight = this.base.getBoundingClientRect().height;
+        if(1 < Math.abs(chatroomUsersHeight - newChatroomUsersHeight)) {
+            updateLayoutVarsChatroomUsersHeight({chatroomUsersHeight: newChatroomUsersHeight});
+        }
+    }
     render() {
         const { users, userName } = this.props;
         const now = Date.now();
@@ -32,7 +40,7 @@ class ChatroomUsers extends React.Component {
                         {user.connections ? onlineIndicator : lastOnline}
                     </div>;
                 });
-        return <div className='chatroom-users'>
+        return <div className='chatroom-users' ref={base => { this.base = base; }}>
             {userList}
         </div>;
     }
@@ -45,7 +53,13 @@ export default compose(
             return {
                 users: state.firebase.data.chatroomUsers,
                 userName: state.user.name,
+                chatroomUsersHeight: state.layoutVars.chatroomUsersHeight,
             };
-        }
+        },
+        (dispatch, ownProps) => ({
+            updateLayoutVarsChatroomUsersHeight: ({ chatroomUsersHeight }) => {
+                return dispatch(LayoutVarsActions.updateLayoutVars({layoutVars: { chatroomUsersHeight }}));
+            },
+        })
     )
 )(ChatroomUsers);

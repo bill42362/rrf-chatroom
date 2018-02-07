@@ -7,6 +7,8 @@ import { Actions } from './MessageInput.js';
 import { sendMessage } from './Messages.js';
 import '../css/message-input.less';
 
+const setupUserNameMessage = <div className='setup-user-name-message'>Please setup your name first.</div>;
+const messageInputPlaceholder = <div className='message-input-placeholder'>Message everyone</div>;
 class MessageInput extends React.Component {
     constructor(props) {
         super(props);
@@ -31,10 +33,8 @@ class MessageInput extends React.Component {
             onChange={e => { updateMessage({message: {content: e.target.value}}); }}
             onKeyDown={this.onKeyDown}
         />;
-        const setupUserNameMessage = <div className='setup-user-name-message'>
-            Please setup your name first.
-        </div>;
         return <div className='message-input'>
+            {!message.content && messageInputPlaceholder}
             {userName ? contenteditable : setupUserNameMessage}
         </div>;
     }

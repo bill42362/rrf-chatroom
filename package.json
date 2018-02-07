@@ -9,6 +9,7 @@
     "devserver": "babel-node src/server",
     "devserver:auto": "nodemon --ignore dist --exec babel-node src/server",
     "wds": "webpack-dev-server --progress",
+    "deploy": "npm run build && firebase deploy",
     "test": "jest"
   },
   "repository": {
