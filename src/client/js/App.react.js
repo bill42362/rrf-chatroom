@@ -10,6 +10,8 @@ import Messages from './Messages.react.js';
 import MessageInput from './MessageInput.react.js';
 import '../css/app.less';
 
+import PeopleIcon from '../img/people_icon.png';
+
 class App extends React.Component {
     constructor(props) { super(props); }
     render() {
@@ -34,7 +36,7 @@ class App extends React.Component {
                         onClick={() => updateShouldCollapseChatroomUsers({
                             shouldCollapseChatroomUsers: !shouldCollapseChatroomUsers
                         })}
-                    >O</div>
+                    ><img src={PeopleIcon} title='users' /></div>
                 </div>
                 <div className='chatroom-users-wrapper' style={{height: chatroomUsersWrapperHeight}}>
                     <ChatroomUsers />
