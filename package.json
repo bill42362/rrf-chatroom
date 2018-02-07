@@ -1,6 +1,6 @@
 {
   "name": "rrf-chatroom",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Chatroom implementd with React-Redux-Firebase.",
   "main": "dist/server/index.js",
   "scripts": {
