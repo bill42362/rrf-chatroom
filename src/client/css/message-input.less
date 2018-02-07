@@ -1,0 +1,36 @@
+// message-input.less
+@import './base.less';
+
+div.message-input {
+    position: relative;
+    border-top: 1px solid #d5d5d5;
+    div.message-input-placeholder {
+        position: absolute;
+        margin: 0px;
+        padding: 0.8em 0.5em 0.8em 1em;
+        color: #d0d0d0;
+        font-weight: 300;
+        letter-spacing: 1px;
+        z-index: -1;
+    }
+    p.message-input-contenteditable {
+        margin: 0px;
+        padding: 0.8em 0.5em 0.8em 1em;
+        &:focus {
+            box-shadow: 0px 0px 2px 1px skyblue;
+            outline: none;
+        }
+    }
+    div.setup-user-name-message {
+        background-color: whitesmoke;
+        margin: 0.5em 0.5em 0.5em 1em;
+        padding: 0.5em;
+        color: dimgray;
+    }
+}
+
+@media (max-width: 767px) {
+    div.message-input {
+    }
+}
+

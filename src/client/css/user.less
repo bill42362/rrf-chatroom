@@ -1,0 +1,29 @@
+// user.less
+@import './base.less';
+
+div.user {
+    margin: 8px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px;
+    div.user-name {
+        display: flex;
+        span.user-name-text {
+            flex: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        span.user-name-label {
+            flex: none;
+            margin-left: 0.5em;
+            font-size: 0.8em;
+            color: gray;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    div.user {
+    }
+}
+
