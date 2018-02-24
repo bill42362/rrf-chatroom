@@ -48,11 +48,18 @@ class ChatroomUsers extends React.Component {
 }
 
 export default compose(
-    firebaseConnect(({ roomName }) => {
+    firebaseConnect((ownProps, store) => {
+        const { name: roomName } = store.getState().room;
         return [`${roomName}/users`];
     }),
     connect(
-        ({ firebase: { data }, user, layoutVars }, { roomName }) => {
+        (state, ownProps) => {
+            const {
+                firebase: { data },
+                room: { name: roomName },
+                user,
+                layoutVars
+            } = state;
             return {
                 users: data[roomName] ? data[roomName].users : undefined,
                 userName: user.name,
