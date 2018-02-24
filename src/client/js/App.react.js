@@ -16,7 +16,7 @@ class App extends React.Component {
     constructor(props) { super(props); }
     render() {
         const {
-            name, chatroomUsersHeight,
+            roomName, name, chatroomUsersHeight,
             shouldCollapseChatroomUsers, updateShouldCollapseChatroomUsers
         } = this.props;
         const chatroomUsersWrapperHeight = shouldCollapseChatroomUsers
@@ -39,12 +39,12 @@ class App extends React.Component {
                     ><img src={PeopleIcon} title='users' /></div>
                 </div>
                 <div className='chatroom-users-wrapper' style={{height: chatroomUsersWrapperHeight}}>
-                    <ChatroomUsers />
+                    <ChatroomUsers roomName={roomName} />
                 </div>
             </div>}
             {name && <div className='chatroom'>
                 <div className='messages-wrapper'>
-                    <Messages />
+                    <Messages roomName={roomName} />
                 </div>
                 <div className='message-input-wrapper'>
                     <MessageInput />
@@ -57,6 +57,7 @@ class App extends React.Component {
 export default connect(
     (state, ownProps) => {
         return {
+            roomName: state.room.name,
             name: state.user.name,
             chatroomUsersHeight: state.layoutVars.chatroomUsersHeight,
             shouldCollapseChatroomUsers: state.layoutVars.shouldCollapseChatroomUsers,

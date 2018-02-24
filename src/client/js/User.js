@@ -22,11 +22,12 @@ export const Reducer = (state = defaultState, action) => {
 
 const updateName = ({ name }) => (dispatch, getState, getFirebase) => {
     return new Promise((resolve, reject) => {
+        const { name: roomName } = getState().room;
         const firebase = getFirebase();
         const database = firebase.database();
         connectRef = database.ref('/.info/connected');
-        connectionsRef = database.ref(`/chatroomUsers/${name}/connections`);
-        lastOnlineRef = database.ref(`/chatroomUsers/${name}/lastOnline`);
+        connectionsRef = database.ref(`${roomName}/users/${name}/connections`);
+        lastOnlineRef = database.ref(`${roomName}/users/${name}/lastOnline`);
         connectRef.on('value', snapshot => {
             if(true === snapshot.val()) {
                 const con = connectionsRef.push(true);
