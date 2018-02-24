@@ -28,3 +28,13 @@ export const getDateStringWithFormat = ({ timestamp, format }) => {
     if(matchSeconds) { format = format.replace(/[s]+/, pad(dateObject.getSeconds(), matchSeconds.length)); }
     return format;
 }
+
+export const getUrlSearches = () => {
+    const result = {};
+    const searches = window.location.search.slice(1).split('&').filter(search => search);
+    searches.forEach(search => {
+        const pair = search.split('=');
+        result[pair[0]] = pair[1];
+    });
+    return result;
+}

@@ -10,13 +10,13 @@ const expressStaticRoutes = [
     {path: '/js/', serverPath: '/../client/js'},
     {path: '/firebase-messaging-sw.js', serverPath: '/../../dist/client/js/firebase-messaging-sw.js'},
 ];
-const renderApp = `
+const renderApp = ({ room }) => `
     <!doctype html>
     <html>
         <head>
             <meta name="viewport" content="width=device-width">
             <meta name="viewport" content="initial-scale=1.0">
-            <title>rrf-chatroom</title>
+            <title>${room} | rrf-chatroom</title>
 
             ${isProd ? '<link rel="stylesheet" href="/css/bundle.css"/>' : ''}
         </head>
@@ -31,6 +31,9 @@ const app = Express();
 expressStaticRoutes.forEach(function(route) {
     app.use(route.path, Express.static(__dirname + route.serverPath));
 });
-app.get('/', (req, res) => { res.send(renderApp); })
-app.get('/:action', (req, res) => { res.send(renderApp); })
+app.get('/', (req, res) => { res.send(renderApp({room: 'lobby'})); })
+app.get('/:room', (req, res) => {
+    const { room } = req.params;
+    res.send(renderApp({ room }));
+})
 app.listen(WEB_PORT);

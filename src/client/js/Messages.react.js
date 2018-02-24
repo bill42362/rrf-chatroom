@@ -34,10 +34,19 @@ class Messages extends React.Component {
 }
 
 export default compose(
-    firebaseConnect(['messages']),
+    firebaseConnect((ownProps, store) => {
+        const { name: roomName } = store.getState().room;
+        return [`${roomName}/messages`];
+    }),
     connect(
-        (state, ownProps) => ({
-            messages: state.firebase.data.messages,
-        })
+        (state, ownProps) => {
+            const {
+                firebase: { data },
+                room: { name: roomName }
+            } = state;
+            return {
+                messages: data[roomName] ? data[roomName].messages : undefined,
+            };
+        }
     )
 )(Messages);

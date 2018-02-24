@@ -9,6 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Debug from 'debug';
 import LayoutVars from './LayoutVars.js';
+import Room from './Room.js';
 import User from './User.js';
 import MessageInput from './MessageInput.js';
 import App from './App.react.js';
@@ -22,6 +23,7 @@ if('production' != process.env.NODE_ENV) { Debug.enable('rrf-chatroom:*'); }
 const reducer = combineReducers({
     firebase: firebaseReducer,
     layoutVars: LayoutVars.Reducer,
+    room: Room.Reducer,
     user: User.Reducer,
     messageInput: MessageInput.Reducer,
 });

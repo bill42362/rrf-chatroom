@@ -23,11 +23,12 @@ class ChatroomUsers extends React.Component {
     render() {
         const { users, userName } = this.props;
         const now = Date.now();
-        const userList = !isLoaded(users)
+        const otherUsers = users ? Object.keys(users).filter(user => userName !== user) : undefined;
+        const userList = !isLoaded(otherUsers)
             ? <div className='mock-user'>Loading ...</div>
-            : isEmpty(users)
-                ? <div className='mock-user'>No online user for now.</div>
-                : Object.keys(users).filter(user => userName !== user).map((key, index) => {
+            : isEmpty(otherUsers)
+                ? <div className='mock-user'>No other users for now.</div>
+                : otherUsers.map((key, index) => {
                     const user = users[key];
                     const oddClassName = 0 === index%2 ? ' chatroom-user-odd' : '';
                     const shouldDisplayDate = MSEC_IN_ONE_DAY < now - user.lastOnline;
@@ -47,13 +48,22 @@ class ChatroomUsers extends React.Component {
 }
 
 export default compose(
-    firebaseConnect(['chatroomUsers']),
+    firebaseConnect((ownProps, store) => {
+        const { name: roomName } = store.getState().room;
+        return [`${roomName}/users`];
+    }),
     connect(
         (state, ownProps) => {
+            const {
+                firebase: { data },
+                room: { name: roomName },
+                user,
+                layoutVars
+            } = state;
             return {
-                users: state.firebase.data.chatroomUsers,
-                userName: state.user.name,
-                chatroomUsersHeight: state.layoutVars.chatroomUsersHeight,
+                users: data[roomName] ? data[roomName].users : undefined,
+                userName: user.name,
+                chatroomUsersHeight: layoutVars.chatroomUsersHeight,
             };
         },
         (dispatch, ownProps) => ({

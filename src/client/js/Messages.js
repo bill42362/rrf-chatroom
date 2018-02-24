@@ -10,10 +10,11 @@ const defaultMessage = {
 export const sendMessage = ({ message }) => (dispatch, getState, getFirebase) => {
     const firebase = getFirebase();
     const { name: author } = getState().user;
+    const { name: roomName } = getState().room;
     const timestamp = Date.now();
     return firebase
     .push(
-        'messages',
+        `${roomName}/messages`,
         Object.assign(
             {},
             defaultMessage,
