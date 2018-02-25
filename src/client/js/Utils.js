@@ -1,5 +1,17 @@
 // Utils.js
 'use strict';
+import MersenneTwister from 'mersenne-twister';
+
+const mersenneTwister = new MersenneTwister();
+export const random = () => mersenneTwister.random_long();
+
+export const newUuid = () => {
+    var regexp = new RegExp('[xy]', 'g');
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(regexp, function(c) {
+        var r = random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+}
 
 export const pad = (num, size) => {
     var s = num + "";
