@@ -16,6 +16,14 @@ const rtcDataTemplate = {
     offeredUsers: [],
 };
 
+const peerPackTemplate = {
+    remoteClientId: '',
+    peerConnection: undefined,
+    isAnswerPeer: false,
+    icecandidate: undefined,
+    peerDescription: undefined,
+};
+
 const getRtcData = ({ firebase, roomName, userName, clientId }) => {
     return Object.assign({}, rtcDataTemplate, {
         userName, clientId
@@ -35,11 +43,11 @@ export const createRtcData = ({ firebase, roomName, userName, clientId }) => new
         selfRtcClientRef.once('value')
             .then(snapshot => {
                 const selfRtcData = snapshot.val();
-                if(!selfRtcData.offeredClientIds) { return; }
-                const removedClientIdKeys = Object.keys(selfRtcData.offeredClientIds)
-                    .filter(key => removedRtcData.clientId === selfRtcData.offeredClientIds[key]);
+                if(!selfRtcData.recevingClientIds) { return; }
+                const removedClientIdKeys = Object.keys(selfRtcData.recevingClientIds)
+                    .filter(key => removedRtcData.clientId === selfRtcData.recevingClientIds[key]);
                 return Promise.all(removedClientIdKeys.map(key => {
-                    return selfRtcClientRef.child(`offeredClientIds/${key}`).remove();
+                    return selfRtcClientRef.child(`recevingClientIds/${key}`).remove();
                 }));
             })
             .catch(error => console.log);
@@ -47,7 +55,7 @@ export const createRtcData = ({ firebase, roomName, userName, clientId }) => new
     rtcClientsRef.on('child_added', snapshot => {
         const addedRtcData = snapshot.val();
         if(clientId === addedRtcData.clientId) { return; }
-        database.ref(`${roomName}/rtcClients/${addedRtcData.clientId}/offeredClientIds`).push(clientId);
+        database.ref(`${roomName}/rtcClients/${addedRtcData.clientId}/recevingClientIds`).push(clientId);
     });
     return { firebase, roomName, userName };
 });
