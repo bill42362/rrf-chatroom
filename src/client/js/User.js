@@ -34,7 +34,7 @@ const updateName = ({ name }) => (dispatch, getState, getFirebase) => {
                 const con = connectionsRef.push(true);
                 con.onDisconnect().remove();
                 lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
-                createRtcData({userName: name, firebase, roomName });
+                createRtcData({userName: name, dispatch, getState, firebase, roomName });
             }
         });
         dispatch({type: 'UPDATE_USER_NAME', payload: { name }});

@@ -114,7 +114,19 @@ const addPeerPacksToFirebase = ({ firebase, roomName, remoteClientId }) => {
     remotePeerPackRef.onDisconnect().remove();
 };
 
-export const createRtcData = ({ firebase, roomName, userName }) => new Promise((resolve, reject) => {
+const addLocalPeerPack = ({ remoteClientId, isAnswerPeer, dispatch, firebase }) => {
+    const localPeerPack = new LocalPeerPack({ remoteClientId, isAnswerPeer });
+    localPeerPack.ondescription = description => {
+        console.log('ondescription() description:', description);
+    };
+    localPeerPack.peerConnection.onicecandidate = event => {
+        console.log('onicecandidate() candidate:', event.candidate);
+    };
+    localPeerPack.setSendingMedia({audio: true, video: true});
+    localPeerPacks[remoteClientId] = localPeerPack;
+};
+
+export const createRtcData = ({ dispatch, getState, firebase, roomName, userName }) => new Promise((resolve, reject) => {
     const database = firebase.database();
     rtcClientsRef = database.ref(`${roomName}/rtcClients`);
     selfRtcClientRef = database.ref(`${roomName}/rtcClients/${clientId}`);
@@ -154,20 +166,11 @@ export const createRtcData = ({ firebase, roomName, userName }) => new Promise((
     peerPacksRef.on('child_added', snapshot => {
         const addedPeerPack = snapshot.val();
         console.log('peerPacksRef.child_added() addedPeerPack:', addedPeerPack);
-        /*
-        const localPeerPack = new LocalPeerPack({
-            remoteClientId: addedRecevingClientId,
-            isAnswerPeer: false,
+        addLocalPeerPack({
+            remoteClientId: addedPeerPack.remoteClientId,
+            isAnswerPeer: addedPeerPack.isAnswerPeer,
+            dispatch, firebase
         });
-        localPeerPack.ondescription = description => {
-            console.log('ondescription() description:', description);
-        };
-        localPeerPack.peerConnection.onicecandidate = event => {
-            console.log('onicecandidate() candidate:', event.candidate);
-        };
-        localPeerPack.setSendingMedia({audio: true, video: true});
-        localPeerPacks[addedRecevingClientId] = localPeerPack;
-         */
     });
 
     resolve({ firebase, roomName, userName });
