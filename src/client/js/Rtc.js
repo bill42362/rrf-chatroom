@@ -40,7 +40,7 @@ const storePeerPackTemplate = {
 const firebasePeerPackTemplate = {
     remoteClientId: '',
     isAnswerPeer: false,
-    icecandidate: undefined,
+    icecandidates: [],
     peerDescription: undefined,
 };
 
@@ -114,14 +114,61 @@ const addPeerPacksToFirebase = ({ firebase, roomName, remoteClientId }) => {
     remotePeerPackRef.onDisconnect().remove();
 };
 
-const addLocalPeerPack = ({ remoteClientId, isAnswerPeer, dispatch, firebase }) => {
+const addLocalPeerPack = ({ roomName, remoteClientId, isAnswerPeer, dispatch, firebase }) => {
+    const database = firebase.database();
+    const selfIceCandidatesRef = database.ref(`${roomName}/rtcClients/${clientId}/peerPacks/${remoteClientId}/iceCandidates`);
+    const remoteIceCandidatesRef = database.ref(`${roomName}/rtcClients/${remoteClientId}/peerPacks/${clientId}/iceCandidates`);
+    const selfDescriptionRef = database.ref(`${roomName}/rtcClients/${clientId}/peerPacks/${remoteClientId}/description`);
+    const remoteDescriptionRef = database.ref(`${roomName}/rtcClients/${remoteClientId}/peerPacks/${clientId}/description`);
     const localPeerPack = new LocalPeerPack({ remoteClientId, isAnswerPeer });
+    let pendingIceCandidates = [];
     localPeerPack.ondescription = description => {
-        console.log('ondescription() description:', description);
+        if(description) {
+            const ref = selfDescriptionRef.set(JSON.stringify(description));
+            ref.onDisconnect().remove();
+        } else {
+            console.log('localPeerPack.ondescription() empty description.');
+        }
     };
     localPeerPack.peerConnection.onicecandidate = event => {
-        console.log('onicecandidate() candidate:', event.candidate);
+        if(event.candidate) {
+            const ref = selfIceCandidatesRef.push(JSON.stringify(event.candidate));
+            ref.onDisconnect().remove();
+        } else {
+            console.log('localPeerPack.onicecandidate() empty candidate.');
+        }
     };
+    localPeerPack.peerConnection.ontrack = event => {
+        console.log('ontrack() event:', event);
+    };
+    localPeerPack.peerConnection.onconnectionstatechange = event => {
+        console.log('onconnectionstatechange() connectionState:', localPeerPack.peerConnection.connectionState);
+    };
+    localPeerPack.peerConnection.oniceconnectionstatechange = event => {
+        console.log('oniceconnectionstatechange() iceConnectionState:', localPeerPack.peerConnection.iceConnectionState);
+    };
+    localPeerPack.peerConnection.onicegatheringstatechange = event => {
+        console.log('onicegatheringstatechange() iceGatheringState:', localPeerPack.peerConnection.iceGatheringState);
+        console.log('onicegatheringstatechange() iceConnectionState:', localPeerPack.peerConnection.iceConnectionState);
+    };
+    remoteIceCandidatesRef.on('child_added', snapshot => {
+        const addedIceCandidate = JSON.parse(snapshot.val());
+        if(!localPeerPack.peerConnection.remoteDescription.type){
+            pendingIceCandidates.push(addedIceCandidate);
+        } else {
+            localPeerPack.peerConnection.addIceCandidate(addedIceCandidate)
+                .then(() => { console.log('child_added() addedIceCandidate:', addedIceCandidate); });
+        }
+    });
+    remoteDescriptionRef.on('value', snapshot => {
+        const changedDescription = JSON.parse(snapshot.val());
+        if(changedDescription) {
+            localPeerPack.peerConnection.setRemoteDescription(changedDescription);
+            Promise.all(pendingIceCandidates.map(candidate => localPeerPack.peerConnection.addIceCandidate(candidate)))
+                .then(() => { pendingIceCandidates = []; })
+                .catch(error => console.log);
+        }
+    });
     localPeerPack.setSendingMedia({audio: true, video: true});
     localPeerPacks[remoteClientId] = localPeerPack;
 };
@@ -169,7 +216,7 @@ export const createRtcData = ({ dispatch, getState, firebase, roomName, userName
         addLocalPeerPack({
             remoteClientId: addedPeerPack.remoteClientId,
             isAnswerPeer: addedPeerPack.isAnswerPeer,
-            dispatch, firebase
+            roomName, dispatch, firebase
         });
     });
 
