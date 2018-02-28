@@ -1,15 +1,12 @@
 // User.js
 'use strict';
 import { createRtcData } from './Rtc.js';
-import { newUuid } from './Utils.js';
 
-const clientId = newUuid();
 let connectRef = undefined;
 let connectionsRef = undefined;
 let lastOnlineRef = undefined;
 
 const defaultState = {
-    clientId,
     name: '',
     editingName: '',
 };
@@ -34,10 +31,10 @@ const updateName = ({ name }) => (dispatch, getState, getFirebase) => {
         lastOnlineRef = database.ref(`${roomName}/users/${name}/lastOnline`);
         connectRef.on('value', snapshot => {
             if(true === snapshot.val()) {
-                const con = connectionsRef.push(clientId);
+                const con = connectionsRef.push(true);
                 con.onDisconnect().remove();
                 lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
-                createRtcData({userName: name, firebase, roomName, clientId });
+                createRtcData({userName: name, firebase, roomName });
             }
         });
         dispatch({type: 'UPDATE_USER_NAME', payload: { name }});

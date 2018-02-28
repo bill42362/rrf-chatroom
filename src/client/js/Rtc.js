@@ -1,7 +1,9 @@
 // Rtc.js
 'use strict';
 import { createPeerConnection } from './createPeerConnection.js';
+import { newUuid } from './Utils.js';
 
+const clientId = newUuid();
 const localPeerPacks = {};
 let selfRtcClientRef = undefined;
 let recevingClientIdsRef = undefined;
@@ -33,11 +35,6 @@ class LocalPeerPack {
         this.isAnswerPeer = isAnswerPeer;
         this.peerConnection = createPeerConnection(peerConnectionConfig);
         if(this.peerConnection) {
-            this.peerConnection.onicecandidate = event => {
-                if(event.candidate && this.onicecandidate) {
-                    this.onicecandidate(event.candidate);
-                }
-            };
             navigator.mediaDevices.getUserMedia({audio: true, video: true})
                 .then(stream => {
                     this.peerConnection.addStream(stream);
@@ -55,6 +52,8 @@ class LocalPeerPack {
                     if(this.ondescription) { this.ondescription(this.description); };
                 })
                 .catch(error => console.log);
+        } else {
+            throw new Error('createPeerConnection() fail.');
         }
     }
 };
@@ -65,7 +64,7 @@ const getRtcData = ({ firebase, roomName, userName, clientId }) => {
     });
 };
 
-export const createRtcData = ({ firebase, roomName, userName, clientId }) => new Promise((resolve, reject) => {
+export const createRtcData = ({ firebase, roomName, userName }) => new Promise((resolve, reject) => {
     const database = firebase.database();
     rtcClientsRef = database.ref(`${roomName}/rtcClients`);
     selfRtcClientRef = database.ref(`${roomName}/rtcClients/${clientId}`);
@@ -102,13 +101,13 @@ export const createRtcData = ({ firebase, roomName, userName, clientId }) => new
         localPeerPack.ondescription = description => {
             console.log('ondescription() description:', description);
         };
-        localPeerPack.onicecandidate = candidate => {
-            console.log('onicecandidate() candidate:', candidate);
+        localPeerPack.peerConnection.onicecandidate = event => {
+            console.log('onicecandidate() candidate:', event.candidate);
         };
         localPeerPacks[addedRecevingClientId] = localPeerPack;
     });
 
-    resolve({ firebase, roomName, userName, clientId });
+    resolve({ firebase, roomName, userName });
 });
 
 export default { createRtcData };
