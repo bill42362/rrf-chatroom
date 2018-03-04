@@ -11,6 +11,7 @@ import Debug from 'debug';
 import LayoutVars from './LayoutVars.js';
 import Room from './Room.js';
 import User from './User.js';
+import Rtc from './Rtc.js';
 import MessageInput from './MessageInput.js';
 import App from './App.react.js';
 import 'firebase/database';
@@ -25,6 +26,7 @@ const reducer = combineReducers({
     layoutVars: LayoutVars.Reducer,
     room: Room.Reducer,
     user: User.Reducer,
+    rtc: Rtc.Reducer,
     messageInput: MessageInput.Reducer,
 });
 

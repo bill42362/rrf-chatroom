@@ -32,7 +32,8 @@ const localPeerPackTemplate = {
 const storePeerPackTemplate = {
     remoteClientId: '',
     remoteUserName: '',
-    stream: undefined,
+    connectionState: 'init',
+    videoTrack: undefined, audioTrack: undefined,
     isSendingVideo: true, isSendingAudio: true,
     isRecevingVideo: true, isRecevingAudio: true,
 };
@@ -46,8 +47,41 @@ const firebasePeerPackTemplate = {
 
 export const Reducer = (state = defaultState, action) => {
     switch(action.type) {
-        case 'UPDATE_USER_EDITING_NAME':
-            return state;
+        case 'ADD_RTC_PEER_PACK':
+            return Object.assign({}, state, {peerPacks: [ ...state.peerPacks, action.payload.peerPack]});
+        case 'UPDATE_RTC_PEER_PACK': {
+            const { remoteClientId } = action.payload.peerPack;
+            const { peerPacks } = state;
+            const peerPackIndex = peerPacks.reduce((current, peerPack, index) => {
+                if(remoteClientId === peerPack.remoteClientId) {
+                    return index;
+                } else {
+                    return current;
+                }
+            }, -1);
+            const newPeerPacks = [
+                ...peerPacks.slice(0, peerPackIndex),
+                Object.assign({}, peerPacks[peerPackIndex], action.payload.peerPack),
+                ...peerPacks.slice(peerPackIndex + 1)
+            ];
+            return Object.assign({}, state, {peerPacks: newPeerPacks});
+        }
+        case 'REMOVE_RTC_PEER_PACK': {
+            const { remoteClientId } = action.payload;
+            const { peerPacks } = state;
+            const peerPackIndex = peerPacks.reduce((current, peerPack, index) => {
+                if(remoteClientId === peerPack.remoteClientId) {
+                    return index;
+                } else {
+                    return current;
+                }
+            }, -1);
+            const newPeerPacks = [
+                ...peerPacks.slice(0, peerPackIndex),
+                ...peerPacks.slice(peerPackIndex + 1)
+            ];
+            return Object.assign({}, state, {peerPacks: newPeerPacks});
+        }
         default:
             return state;
     }
@@ -88,7 +122,7 @@ class StorePeerPack {
     constructor({ firebase, remoteClientId }) {
         const database = firebase.database();
         this.remoteClientId = remoteClientId;
-        this.remoteClientRef = database.ref(`${roomName}/rtcClients/${clientId}`);
+        this.remoteClientRef = database.ref(`${roomName}/rtcClients/${remoteClientId}`);
         this.remoteClientRef.once('value')
             .then(snapshot => {
                 const remoteRtcData = snapshot.val();
@@ -139,7 +173,15 @@ const addLocalPeerPack = ({ roomName, remoteClientId, isAnswerPeer, dispatch, fi
         }
     };
     localPeerPack.peerConnection.ontrack = event => {
-        console.log('ontrack() event:', event);
+        console.log('ontrack() track:', event.track);
+        const { track } = event;
+        const peerPack = { remoteClientId };
+        if('video' === track.kind) {
+            peerPack.videoTrack = track;
+        } else if('audio' === track.kind) {
+            peerPack.audioTrack = track;
+        }
+        dispatch(updatePeerPack({ peerPack }));
     };
     localPeerPack.peerConnection.onconnectionstatechange = event => {
         console.log('onconnectionstatechange() connectionState:', localPeerPack.peerConnection.connectionState);
@@ -172,6 +214,22 @@ const addLocalPeerPack = ({ roomName, remoteClientId, isAnswerPeer, dispatch, fi
     localPeerPack.setSendingMedia({audio: true, video: true});
     localPeerPacks[remoteClientId] = localPeerPack;
 };
+
+const addPeerPack = ({ peerPack }) => (dispatch, getState) => new Promise((resolve, reject) => {
+    const fullPeerPack = Object.assign({}, storePeerPackTemplate, peerPack);
+    dispatch({type: 'ADD_RTC_PEER_PACK', payload: {peerPack: fullPeerPack}});
+    resolve({peerPack: fullPeerPack});
+});
+
+const updatePeerPack = ({ peerPack }) => (dispatch, getState) => new Promise((resolve, reject) => {
+    dispatch({type: 'UPDATE_RTC_PEER_PACK', payload: { peerPack }});
+    resolve({ peerPack });
+});
+
+const removePeerPack = ({ remoteClientId }) => (dispatch, getState) => new Promise((resolve, reject) => {
+    dispatch({type: 'UPDATE_RTC_PEER_PACK', payload: { remoteClientId }});
+    resolve({ remoteClientId });
+});
 
 export const createRtcData = ({ dispatch, getState, firebase, roomName, userName }) => new Promise((resolve, reject) => {
     const database = firebase.database();
@@ -218,11 +276,22 @@ export const createRtcData = ({ dispatch, getState, firebase, roomName, userName
             isAnswerPeer: addedPeerPack.isAnswerPeer,
             roomName, dispatch, firebase
         });
+
+        const remoteUserNameRef = database.ref(`${roomName}/rtcClients/${addedPeerPack.remoteClientId}/userName`);
+        remoteUserNameRef.once('value')
+            .then(snapshot => {
+                const remoteUserName = snapshot.val();
+                dispatch(addPeerPack({peerPack: {
+                    remoteClientId: addPeerPack.remoteClientId,
+                    remoteUserName
+                }}));
+            })
+            .catch(error => console.log);
     });
 
     resolve({ firebase, roomName, userName });
 });
 
-export const Actions = { };
+export const Actions = { addPeerPack, removePeerPack, updatePeerPack };
 
 export default { Reducer, Actions, createRtcData };
