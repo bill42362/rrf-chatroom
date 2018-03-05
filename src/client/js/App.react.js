@@ -7,6 +7,7 @@ import UserNameInput from './UserNameInput.react.js';
 import User from './User.react.js';
 import ChatroomUsers from './ChatroomUsers.react.js';
 import Messages from './Messages.react.js';
+import Rtc from './Rtc.react.js';
 import MessageInput from './MessageInput.react.js';
 import '../css/app.less';
 
@@ -43,8 +44,13 @@ class App extends React.Component {
                 </div>
             </div>}
             {name && <div className='chatroom'>
-                <div className='messages-wrapper'>
-                    <Messages />
+                <div className='messages-and-rtc-wrapper'>
+                    <div className='messages-wrapper'>
+                        <Messages />
+                    </div>
+                    <div className='rtc-wrapper'>
+                        <Rtc />
+                    </div>
                 </div>
                 <div className='message-input-wrapper'>
                     <MessageInput />

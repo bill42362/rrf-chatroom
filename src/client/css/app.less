@@ -36,9 +36,20 @@ div.app {
         flex: auto;
         display: flex;
         flex-direction: column;
-        div.messages-wrapper {
+        div.messages-and-rtc-wrapper {
             flex: auto;
             display: flex;
+            div.messages-wrapper {
+                flex: auto;
+                display: flex;
+            }
+            div.rtc-wrapper {
+                flex: none;
+                div.rtc {
+                    width: 250px; height: 100%;
+                    background-color: rgba(0, 128, 0, 0.5);
+                }
+            }
         }
         div.message-input-wrapper {
             flex: none;
