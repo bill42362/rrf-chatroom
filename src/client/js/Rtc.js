@@ -33,7 +33,7 @@ const storePeerPackTemplate = {
     remoteClientId: '',
     remoteUserName: '',
     connectionState: 'init',
-    videoTrack: undefined, audioTrack: undefined,
+    stream: undefined, videoTrack: undefined, audioTrack: undefined,
     isSendingVideo: true, isSendingAudio: true,
     isRecevingVideo: true, isRecevingAudio: true,
 };
@@ -173,7 +173,7 @@ const addLocalPeerPack = ({ roomName, remoteClientId, isAnswerPeer, dispatch, fi
         }
     };
     localPeerPack.peerConnection.ontrack = event => {
-        console.log('ontrack() track:', event.track);
+        console.log('ontrack() event:', event);
         const { track } = event;
         const peerPack = { remoteClientId };
         if('video' === track.kind) {
@@ -181,6 +181,7 @@ const addLocalPeerPack = ({ roomName, remoteClientId, isAnswerPeer, dispatch, fi
         } else if('audio' === track.kind) {
             peerPack.audioTrack = track;
         }
+        peerPack.stream = event.streams[0];
         dispatch(updatePeerPack({ peerPack }));
     };
     localPeerPack.peerConnection.onconnectionstatechange = event => {
@@ -198,8 +199,8 @@ const addLocalPeerPack = ({ roomName, remoteClientId, isAnswerPeer, dispatch, fi
         if(!localPeerPack.peerConnection.remoteDescription.type){
             pendingIceCandidates.push(addedIceCandidate);
         } else {
-            localPeerPack.peerConnection.addIceCandidate(addedIceCandidate)
-                .then(() => { console.log('child_added() addedIceCandidate:', addedIceCandidate); });
+            localPeerPack.peerConnection.addIceCandidate(addedIceCandidate);
+            //.then(() => { console.log('child_added() addedIceCandidate:', addedIceCandidate); });
         }
     });
     remoteDescriptionRef.on('value', snapshot => {
